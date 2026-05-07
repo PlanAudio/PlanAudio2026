@@ -1,0 +1,279 @@
+<html>
+<head>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link href='http://fonts.googleapis.com/css?family=Lato:300,400,900' rel='stylesheet' type='text/css'>
+<link href="style.css" rel="stylesheet">
+<title>Your Project Title</title>
+
+</head>
+
+<body>
+
+<div id="header" class="container-fluid">
+    <div class="row" style="text-align: center;">
+        <h1>Unified Synthesis of Compositional Speech and Sound from Free-Form Text Prompts</h1>
+    </div>
+</div>
+
+<div class="container">
+    <h2>Abstract</h2>
+    <span>
+        Audio generation has seen significant progress, yet synthesizing unified audio where speech and environmental sounds are naturally composited remains a challenge. Current methods either rely on disjoint pipelines that fail to capture fine-grained interactions or require structured inputs and external text rewriting, limiting the flexibility of free-form text prompts. In this paper, we introduce a new task: Free-Form-Text-Prompt-to-Unified-Audio generation, which aims to directly synthesize unified audio containing speech, sound, and their composites from unconstrained natural language. To address this task, we propose PlanAudio, an encoder-free, autoregressive LLM-based framework. PlanAudio leverages the intrinsic language understanding of LLMs and introduces a Semantic latent chain-of-thought (Latent CoT) mechanism. This mechanism enables the model to perform implicit semantic planning in a continuous latent space before audio generation, effectively bridging high-level semantic understanding and low-level acoustic synthesis. Furthermore, we create PlanAudio-Bench, a specialized benchmark for evaluating composite audio scenarios. We conduct evaluation across the scenarios of speech, sound, and their compositions. Results demonstrate that PlanAudio outperforms existing pipeline and unified baselines. Our analysis further reveals the superiority of Semantic Latent CoT over other CoT mechanisms and highlights the importance of continuous multi-scenario training curricula.
+    </span>
+</div>
+
+<div class="container">
+    <h2>Architecture</h2>
+    <img src="method.png" width="100%">
+</div>
+
+<!-- ===== Sample Block 1 ===== -->
+<div class="container">
+    <h2>Samples</h2>
+    
+    <table class="table table-responsive">
+        <thead>
+        <tr class="text-center">
+            <td>Description</td>
+            <td><b>Ours</b></td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2 (Speech+Sound)</td>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr>
+            <td>A violin plays a short melody, followed by a man speaking: "Hopefully you all know that. But if you just slide your hand up into second position. This is something I do all the time but I never thought about teaching it this way.". The violin then plays another short melody.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/61/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/61/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/61/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/61/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <tbody>
+
+        <tr>
+            <td>A violin plays a short melody, followed by a man speaking: "Hopefully you all know that. But if you just slide your hand up into second position. This is something I do all the time but I never thought about teaching it this way.". The violin then plays another short melody.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/66/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/66/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/66/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/66/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        <tbody>
+
+        <tr>
+            <td>A violin plays a short melody, followed by a man speaking: "Hopefully you all know that. But if you just slide your hand up into second position. This is something I do all the time but I never thought about teaching it this way.". The violin then plays another short melody.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/63/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/63/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/63/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/63/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        </tbody>
+
+
+        <tbody>
+
+        <tr>
+            <td>A violin plays a short melody, followed by a man speaking: "Hopefully you all know that. But if you just slide your hand up into second position. This is something I do all the time but I never thought about teaching it this way.". The violin then plays another short melody.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/7/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/7/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/7/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./nips_demo/7/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+
+
+    </table>
+</div>
+
+<!-- ===== Sample Block 2 ===== -->
+<!-- <div class="container">
+    <h2>Samples: comparison to prior work</h2>
+    
+    <table class="table table-responsive">
+        <thead>
+        <tr class="text-center">
+            <td>Description</td>
+            <td><b>Ours</b></td>
+            <td>Baseline 1</td>
+            <td>Baseline 2</td>
+            <td>Ground Truth</td>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr>
+            <td>people cheering while someone speaks</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="audio/ours_2.mp3" type="audio/mpeg">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="audio/base1_2.mp3" type="audio/mpeg">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="audio/base2_2.mp3" type="audio/mpeg">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="audio/gt_2.mp3" type="audio/mpeg">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div> -->
+
+<!-- ===== Sample Block 3 ===== -->
+<!-- <div class="container">
+    <h2>Samples: comparison to prior work</h2>
+    
+    <table class="table table-responsive">
+        <thead>
+        <tr class="text-center">
+            <td>Description</td>
+            <td><b>Ours</b></td>
+            <td>Baseline 1</td>
+            <td>Baseline 2</td>
+            <td>Ground Truth</td>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr>
+            <td>keyboard typing with speech</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="audio/ours_3.mp3" type="audio/mpeg">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="audio/base1_3.mp3" type="audio/mpeg">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="audio/base2_3.mp3" type="audio/mpeg">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="audio/gt_3.mp3" type="audio/mpeg">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div> -->
+
+</body>
+</html>
