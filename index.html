@@ -1,0 +1,1236 @@
+<html>
+<head>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link href='http://fonts.googleapis.com/css?family=Lato:300,400,900' rel='stylesheet' type='text/css'>
+<link href="style.css" rel="stylesheet">
+<title>Your Project Title</title>
+
+</head>
+
+<body>
+
+<!-- <div id="header" class="container-fluid">
+    <div class="row" style="text-align: center;">
+        <h1>Unified Synthesis of Compositional Speech and Sound from Free-Form Text Prompts</h1>
+    </div>
+</div> -->
+
+<div id="header" class="container-fluid">
+    <div class="row" style="text-align: center; padding-bottom: 20px;">
+        <h1>Unified Synthesis of Compositional Speech and Sound from Free-Form Text Prompts</h1>
+        <div style="margin-top: 15px;">
+            <a href="https://anonymous.4open.science/r/PlanAudio_code-D753" target="_blank" class="btn btn-dark btn-lg" style="background-color: #24292e; color: white; border-color: #24292e;">
+                <span class="glyphicon glyphicon-link" aria-hidden="true"></span> Code
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- <div id="header" class="container-fluid">
+    <div class="row" style="text-align: center;">
+        <h1>Unified Synthesis of Compositional Speech and Sound from Free-Form Text Prompts</h1>
+        <p style="font-size: 18px; margin-top: 10px;">
+            <a href="https://github.com/你的用户名/你的仓库名" target="_blank" style="font-weight: bold; color: #337ab7;">
+                [Code on GitHub]
+            </a>
+        </p>
+    </div>
+</div> -->
+
+<div class="container">
+    <h2>Abstract</h2>
+    <span>
+        Audio generation has seen significant progress, yet synthesizing unified audio where speech and environmental sounds are naturally composited remains a challenge. Current methods either rely on disjoint pipelines that fail to capture fine-grained interactions or require structured inputs and external text rewriting, limiting the flexibility of free-form text prompts. In this paper, we introduce a new task: Free-Form-Text-Prompt-to-Unified-Audio generation, which aims to directly synthesize unified audio containing speech, sound, and their composites from unconstrained natural language. To address this task, we propose PlanAudio, an encoder-free, autoregressive LLM-based framework. PlanAudio leverages the intrinsic language understanding of LLMs and introduces a Semantic latent chain-of-thought (Latent CoT) mechanism. This mechanism enables the model to perform implicit semantic planning in a continuous latent space before audio generation, effectively bridging high-level semantic understanding and low-level acoustic synthesis. Furthermore, we create PlanAudio-Bench, a specialized benchmark for evaluating composite audio scenarios. We conduct evaluation across the scenarios of speech, sound, and their compositions. Results demonstrate that PlanAudio outperforms existing pipeline and unified baselines. Our analysis further reveals the superiority of Semantic Latent CoT over other CoT mechanisms and highlights the importance of continuous multi-scenario training curricula.
+    </span>
+</div>
+
+<div class="container">
+    <h2>Architecture</h2>
+    <img src="method.png" width="100%">
+</div>
+
+<!-- ===== Sample Block 1 ===== -->
+<div class="container">
+    <!-- <h2>Section1: Composite Scenario</h2> -->
+     <h2 style="font-weight: bold;">Samples in composite scenario</h2>
+    
+    <table class="table table-responsive">
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2 (Speech+Sound)</td>
+        </tr>
+        </thead>
+        <!-- 1 -->
+        <tbody>
+
+        <tr>
+            <td>A violin plays a short melody, followed by a man speaking: "Hopefully you all know that. But if you just slide your hand up into second position. This is something I do all the time but I never thought about teaching it this way.". The violin then plays another short melody.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/1/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/1/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/1/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/1/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 2 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2 (Speech+Sound)</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>A hip-hop beat plays as a man raps: "With the letters on one slot devil, it's magic. How I keep it clean, no static. I'm Mike Maverick. Sean's bright, prismatic. I rock beats. Indeed, I got what you need.".</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/2/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/2/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/2/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/2/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+        </tbody>
+
+        <!-- 3 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2 (Speech+Sound)</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>Music plays as a man begins to speak: "Hello, my name is Dr. Ian Dunbar. Most dog training programs have a single host, even though there are nearly as many ways to train dogs as there are dog trainers.".</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/3/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/3/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/3/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/3/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+
+        <!-- 4 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2 (Speech+Sound)</td>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr>
+            <td>A man speaks, "some interesting riffs. It's starting on the fifth fret on the E string. And when you play the note, you go low.", as a bass guitar plays a single note, followed by another note that slides down in pitch.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/4/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/4/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/4/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/4/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 5 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2 (Speech+Sound)</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>A man speaks, saying "And the last tune is called The Hurricane. The Hurricane.", followed by the sound of a violin playing.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/5/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/5/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/5/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/5/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 6 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2 (Speech+Sound)</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>Music plays as a man says: "It has a front camera with wide angle which is 40% wider than normal one and you can record high dimension videos in screen size of 1080 pixels 30 frames per second".</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/6/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/6/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/6/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/6/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+         <!-- 7 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2 (Speech+Sound)</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>Upbeat music plays as a man speaks: "First and ever, the only dryer that is touch. Touch the screen, slide for speed. Touch the screen, slide for temperature. And touch the screen,".</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/7/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/7/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/7/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/7/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 8 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2 (Speech+Sound)</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>An electric guitar plays with a clean tone, then a man says: "Okay, so I have everything set to flat and I have my gain at 9 o'clock. Here's what the overdrive channel sounds like.", after which the guitar plays again with a distorted effect.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/8/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/8/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/8/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/8/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 9 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2 (Speech+Sound)</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>Rhythmic electronic music plays, then stops, and a man says: "So, let's get started. I used to native instruments massive and".</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/9/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/9/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/9/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/composite/9/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+
+
+    </table>
+</div>
+
+
+
+
+
+
+<!-- ===== Sample Block 2 ===== -->
+<div class="container">
+    <!-- <h2>Section2: Sound Scenario</h2> -->
+     <h2 style="font-weight: bold;">Samples in sound scenario</h2>
+    
+    <table class="table table-responsive">
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2</td>
+        </tr>
+        </thead>
+        <!-- 1 -->
+        <tbody>
+
+        <tr>
+            <td>Man speaking continuously with hissing in the background.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/1/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/1/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/1/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/1/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 2 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>A woman laughs with some wind blowing and sheep bleating.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/2/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/2/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/2/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/2/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+        </tbody>
+
+        <!-- 3 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>A car engine idles and then the horn blows.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/3/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/3/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/3/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/3/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+
+        <!-- 4 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2</td>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr>
+            <td>A machine works while something is rasping.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/4/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/4/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/4/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/4/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 5 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>A loud burst followed by laughter.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/5/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/5/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/5/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/5/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 6 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>Food frying in a pan.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/6/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/6/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/6/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/6/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+         <!-- 7 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>A jackhammer operating.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/7/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/7/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/7/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/7/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 8 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>A man is speaking as birds are chirping.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/8/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/8/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/8/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/8/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 9 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>AudioLDM2</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>A flock of sheep baaing.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/9/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/9/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/9/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/sound/9/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+
+
+    </table>
+</div>
+
+
+
+
+
+
+<!-- ===== Sample Block 3 ===== -->
+<div class="container">
+    <!-- <h2>Section3: Speech Scenario</h2> -->
+     <h2 style="font-weight: bold;">Samples in speech scenario</h2>
+    
+    <table class="table table-responsive">
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>PromptTTS++</td>
+        </tr>
+        </thead>
+        <!-- 1 -->
+        <tbody>
+
+        <tr>
+            <td>A woman speaks, "He summoned his engineer.", with no noise in the background.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/1/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/1/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/1/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/1/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 2 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>PromptTTS++</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>A man is speaking: "He was quiet, and I might almost say silent, during the whole evening; but I could see from the testimony of his altered countenance how strong is the passion for life that dwells in the human breast.".</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/2/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/2/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/2/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/2/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+        </tbody>
+
+        <!-- 3 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>PromptTTS++</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>"He had broken a thickness of ice, the formation of many a winter; had had his reasons for a long silence.", a woman says.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/3/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/3/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/3/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/3/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+
+        <!-- 4 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>PromptTTS++</td>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr>
+            <td>A woman speaks: "The leisure rendered by the wife in such cases is, of course, not a simple manifestation of idleness or indolence.", there's no other sounds in the background.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/4/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/4/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/4/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/4/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 5 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>PromptTTS++</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>A woman speaks: "The Fairview band was engaged to discourse as much harmony as it could produce, and the resources of the great house were taxed to entertain the guests.", there's no other sounds in the background.</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/5/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/5/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/5/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/5/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 6 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>PromptTTS++</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>A woman speaks, saying "He looked at us in a queer way.".</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/6/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/6/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/6/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/6/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+         <!-- 7 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>PromptTTS++</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>A male says: "All passed so quickly, there was so much going on around him, the Tree quite forgot to look to himself.".</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/7/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/7/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/7/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/7/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 8 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>PromptTTS++</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>In a quite room, a man begins to speak: "Paul takes pride in his ministry, not to his own praise but to the praise of God.".</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/8/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/8/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/8/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/8/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+        <!-- 9 -->
+        <thead>
+        <tr class="text-left">
+            <td>Prompt</td>
+            <td>Ours</td>
+            <td>VoiceLDM-s</td>
+            <td>VoiceLDM-m</td>
+            <td>PromptTTS++</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>An adult male speaks in a silent background, saying: "With such a radical opposition of sentiment, both factions were on the alert to seize every available vantage ground."</td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/9/4.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/9/1.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/9/2.wav" type="audio/wav">
+                </audio>
+            </td>
+
+            <td class="text-center">
+                <audio controls style="width: 150px;">
+                    <source src="./demo/speech/9/3.wav" type="audio/wav">
+                </audio>
+            </td>
+        </tr>
+
+        </tbody>
+
+
+
+    </table>
+</div>
+
+
+
+</body>
+</html>
